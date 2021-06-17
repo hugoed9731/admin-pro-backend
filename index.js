@@ -10,31 +10,22 @@ const app = express();
 // Configurar CORS
 app.use(cors()); // use es un middelware, es un funcion que se va a ejecutar siempre hacia abajo
 
+// Lectura de body y parseo  - middleware
+app.use(express.json());
+
 // Base de datos 
 dbConnection();
 console.log(process.env);
 
 // Rutas
-// req - infomacion de los headers, que cliente fue
-// res - lo que nosotros le vamos a responder al cliente 
-app.get('/', (req, res) => {
-    res.json({
-        ok: true,
-        msg: 'Hola Mundo'
-    });
-});
+// Acceder a la ruta desde aqui
+app.use('/api/usuarios', require('./routes/usuarios'));
+app.use('/api/login', require('./routes/auth'));
 
 // levantar servidor
 app.listen(process.env.PORT, () => {
     console.log(' Servidor corriendo en puerto' + process.env.PORT);
 });
-
-
-
-
-
-
-
 
 
 // fVvlH71tnOeqDDg8
