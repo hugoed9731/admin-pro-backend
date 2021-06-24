@@ -8,11 +8,27 @@ const { generarJWT } = require("../helpers/jwt");
 
 const getUsuarios = async(req, res) => { // esto es el controlador cuando se haga la peticion a la ruta de usuarios
 
-        const usuarios = await Usuario.find({}, 'nombre email role google'); //{} especificamos un filtro
+        // PAGINACION 
+        // si no manda numero que utilice el 0
+        const desde = Number(req.query.desde) || 0;
+        console.log(desde);
+
+
+        // Lo que esta dentro de [] es destructuracion del arreglo, para obtener datos
+        const [usuarios, total] = await Promise.all([ //esto es una coleccion de promesas
+            // ejecuta todas estas promesas
+            Usuario //esta es la primero promesa
+            .find({}, 'nombre email role google img') // {} especificamos un filtro
+            .skip(desde) //que se salte los registros apartir del desde o lo que contenga
+            .limit(5), //cuantosregistros se quieren obtener desde esa posicion
+
+            Usuario.countDocuments() //segundo valor de la promesa
+        ]);
 
         res.json({
             ok: true,
-            usuarios
+            usuarios,
+            total
         });
     }
     // req - esta la peticion del usuario
@@ -70,7 +86,7 @@ const actualizarUsuario = async(req, res = response) => {
 
 
     // uid que viene como parte del url
-    const uid = req.params.id;
+    const uid = req.params.id; // recuperamos el uid que viene como parte del url
     try {
         const usuarioDB = await Usuario.findById(uid);
 
