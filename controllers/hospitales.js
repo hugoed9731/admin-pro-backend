@@ -37,18 +37,88 @@ const crearHospital = async(req, res = response) => {
     }
 }
 
-const actualizarHospital = (req, res = response) => {
-    res.json({
-        ok: true,
-        msg: 'actualizarHospital'
-    });
+const actualizarHospital = async(req, res = response) => {
+
+    const id = req.params.id; // recuperar el id de la ruta
+    const uid = req.uid; // tenemos acceso al uid, porque se paso por el JWT
+
+    try {
+        // obtener la referencia, para verificar que si existe un hospital con ese id
+        const hospital = await Hospital.findById(id);
+        // si no existe el hospital
+        if (!hospital) {
+            return res.status(404).json({
+                ok: false,
+                msg: 'Hospital no encontrado por id'
+            });
+        }
+
+        // Si todo esta bien aqui se realiza la actualizacion
+        // este es el nombre que debe de venir en la peticion
+
+        const cambioHospital = {
+            ...req.body,
+            usuario: uid,
+            // los tres puntos significa que ahi viene el nombre y el id, y etc
+        }
+
+
+        // GRABAR EN LA BD
+        const hospitalActualizado = await Hospital.findByIdAndUpdate(id, cambioHospital, { new: true });
+        // {{new: true}} - nos devuelve el ultimo elemento actualizado
+
+
+        res.json({
+            ok: true,
+            hospital: hospitalActualizado
+        });
+
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Hable con el administrador'
+        });
+    }
+
+
 }
 
-const borrarHospital = (req, res = response) => {
-    res.json({
-        ok: true,
-        msg: 'borrarHospital'
-    });
+const borrarHospital = async(req, res = response) => {
+
+
+    const id = req.params.id; // recuperar el id de la ruta
+
+    try {
+        // obtener la referencia, para verificar que si existe un hospital con ese id
+        const hospital = await Hospital.findById(id);
+        // si no existe el hospital
+        if (!hospital) {
+            return res.status(404).json({
+                ok: false,
+                msg: 'Hospital no encontrado por id'
+            });
+        }
+
+        // GRABAR EN LA BD
+        await Hospital.findByIdAndDelete(id);
+
+
+        res.json({
+            ok: true,
+            msg: 'Hospital borrado'
+        });
+
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Hable con el administrador'
+        });
+    }
+
 }
 
 
