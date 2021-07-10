@@ -115,7 +115,15 @@ const actualizarUsuario = async(req, res = response) => {
             }
 
         }
-
+        // esto solo debe de funcionar si no es de un usuario de google
+        if (!usuarioDB.google) {
+            campos.email = email;
+        } else if (usuarioDB.email !== email) {
+            return res.status(200).json({
+                ok: false,
+                msg: 'Usuario de google no puede cambiar su correo'
+            });
+        }
         campos.email = email;
         const usuarioActualizado = await Usuario.findByIdAndUpdate(uid, campos, { new: true }); // new: true - que moongose no nos regrese versiones pasadas antes de la actualizacion
         // evitamos actualizar la informacion que viene dentro de los campos

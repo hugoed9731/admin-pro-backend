@@ -87,7 +87,7 @@ const retornaImagen = (req, res = response) => {
         // responde una imagen
         res.sendFile(pathImg);
     } else {
-        const pathImg = path.join(__dirname, `../uploads/nodisponible.png`); // imagen por defecto en caso de que no se envie nada
+        const pathImg = path.join(__dirname, `../uploads/no-img.png`); // imagen por defecto en caso de que no se envie nada
         res.sendFile(pathImg);
     }
 
