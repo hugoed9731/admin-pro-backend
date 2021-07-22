@@ -6,13 +6,13 @@ const { validarCampos } = require('../middlewares/validar-campos');
 const { validarJWT } = require('../middlewares/validar-jwt');
 
 // importar controladores
-const { getMedicos, crearMedico, actualizarMedico, borrarMedico } = require('../controllers/medicos');
+const { getMedicos, crearMedico, actualizarMedico, borrarMedico, getMedicoById } = require('../controllers/medicos');
 
 const router = Router();
 
 // req - infomacion de los headers, que cliente fue
 // res - lo que nosotros le vamos a responder al cliente 
-router.get('/', getMedicos);
+router.get('/', validarJWT, getMedicos);
 
 // crear usuario
 router.post('/', [
@@ -36,6 +36,9 @@ router.put('/:id', [
 ], validarJWT, actualizarMedico);
 
 router.delete('/:id', validarJWT, borrarMedico);
+
+router.get('/:id', validarJWT, getMedicoById);
+
 
 
 
