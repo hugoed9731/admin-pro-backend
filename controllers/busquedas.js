@@ -18,8 +18,9 @@ const getTodo = async(req, res = response) => { // esto es el controlador cuando
     // esto se puede hace con await, pero tardari tres veces mas, es mas agil de esta manera
     const [usuarios, medicos, hospitales] = await Promise.all([
         Usuario.find({ nombre: regex }),
+        Medico.find({ nombre: regex }),
         Hospital.find({ nombre: regex }),
-        Medico.find({ nombre: regex })
+
     ]);
 
 
@@ -27,8 +28,9 @@ const getTodo = async(req, res = response) => { // esto es el controlador cuando
         res.json({
             ok: true,
             usuarios,
-            hospitales,
-            medicos
+            medicos,
+            hospitales
+
         });
 
     } catch (error) {

@@ -3,6 +3,7 @@ const bcryp = require('bcryptjs'); // libreria para encriptar contraseña
 const Usuario = require("../models/usuario");
 const { generarJWT } = require("../helpers/jwt");
 const { googleVerify } = require("../helpers/google-verify");
+const { getMenuFrontEnd } = require("../helpers/menu-frontend");
 
 
 const login = async(req, res = response) => {
@@ -35,7 +36,8 @@ const login = async(req, res = response) => {
 
         res.json({
             ok: true,
-            token
+            token,
+            menu: getMenuFrontEnd(usuarioDB.role)
         });
 
     } catch (error) {
@@ -86,7 +88,10 @@ const googleSignIn = async(req, res = response) => {
 
         res.json({
             ok: true,
-            token
+            token,
+            menu: getMenuFrontEnd(usuario.role)
+                // si ya existe toma el rol que se crea en el usuario
+
         });
     } catch (error) {
         res.status(401).json({
@@ -111,8 +116,9 @@ const renewToken = async(req, res = response) => {
     res.json({
         ok: true,
         token,
-        usuario
-        // este es el token nuevo que regresamos
+        usuario,
+        menu: getMenuFrontEnd(usuario.role)
+            // este es el token nuevo que regresamos
     });
 }
 
