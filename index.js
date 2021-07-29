@@ -1,4 +1,6 @@
 require('dotenv').config(); // leé las variables de entorno que pongamos en .env
+
+const path = require('path');
 const express = require('express');
 const cors = require('cors'); // usamos cors para permitir peticiones de cualquier servidor
 const { dbConnection } = require('./database/config');
@@ -27,10 +29,13 @@ app.use('/api/hospitales', require('./routes/hospitales'));
 app.use('/api/medicos', require('./routes/medicos'));
 app.use('/api/todo', require('./routes/busquedas'));
 app.use('/api/upload', require('./routes/uploads'));
-
-
 app.use('/api/login', require('./routes/auth'));
 
+// Lo último
+// * cualquier peticion que no este incluida arriba va a caer aquí
+app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'public/index.html'));
+});
 
 // levantar servidor
 app.listen(process.env.PORT, () => {
